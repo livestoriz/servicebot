@@ -45,6 +45,14 @@ import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
 import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
+import { store } from "./store";
+import _ from "lodash";
+let plugins = store.getState().plugins;
+
+let routes = _.reduce(plugins, (pluginRoutes, plugin) => {
+    return pluginRoutes.concat(plugin.routes)
+}, []);
+
 let AppRouter = function(props) {
 
     return (
@@ -99,7 +107,7 @@ let AppRouter = function(props) {
                 <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                 <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
                 <Route path="email-templates/:templateId" component={EmailTemplateForm}/>
-
+                {routes}
             </Route>
             <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
             <Route name="Automated Installation" path="setup" component={Setup}/>

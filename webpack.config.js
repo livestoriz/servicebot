@@ -3,9 +3,26 @@ var path = require('path');
 
 var BUILD_DIR = path.resolve(__dirname, 'public/build');
 var APP_DIR = path.resolve(__dirname, 'views');
-var config = {
+var PLUGIN_DIR = path.resolve(__dirname, 'plugins');
+
+let glob = require("glob");
+let pluginConfig = new Promise((resolve, reject) => {
+    glob('./plugins/**/views/reducer.js', (err, files) => {
+        let plugins = files.map((file) => {return file.split("/")[2]});
+        console.log(plugins);
+        resolve(plugins);
+    })
+})
+
+
+var config = function(){
+    return pluginConfig.then((plugins) => {
+        console.log(plugins);
+    return {
     entry: {
-        "app" : ['react-hot-loader/patch', APP_DIR + '/index.jsx']
+            "app" : ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
+
+
     },
     output: {
         path: BUILD_DIR,
@@ -27,26 +44,34 @@ var config = {
             }
         }
     },
-
+    externals : {
+        servicebot_plugins : JSON.stringify(plugins)
+    },
     module : {
         loaders : [
             {
                 test : /\.jsx?/,
                 include : APP_DIR,
-                loader : 'babel'
+                loader : 'babel-loader'
             },
+            {
+                test : /\.jsx?/,
+                include : PLUGIN_DIR,
+                loader : 'babel-loader'
+            },
+
             {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"
             },
             { test: /js[\/\\].+\.(jsx|js)$/,
-                loader: 'imports?jQuery=jquery,$=jquery,this=>window'
+                loader: 'imports-loader?jQuery=jquery,$=jquery,this=>window'
             }
 
         ]
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
 
         // new webpack.optimize.UglifyJsPlugin({
         //     compress: {
@@ -60,7 +85,7 @@ var config = {
         // })
 
     ]
-};
+}})};
 
 
 module.exports = config;

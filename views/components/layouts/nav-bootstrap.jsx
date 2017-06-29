@@ -12,9 +12,16 @@ const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
         user: state.user || null,
-        options: state.options
+        options: state.options,
+        plugins: state.plugins
     }
 };
+const PluginLinks = (plugins) => {
+    return _.reduce(plugins, (menus, plugin) => {
+        return menus.concat(plugin.navMenus);
+    }, [])
+}
+
 
 const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
@@ -127,6 +134,7 @@ class NavBootstrap extends React.Component {
                             <li><Link to="/system-settings">System Settings</Link></li>
                         </ul>
                     </li>
+                    {PluginLinks(this.props.plugins)}
                 </ul>
             )
         }else{
@@ -142,6 +150,8 @@ class NavBootstrap extends React.Component {
                             <li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>
                         </ul>
                     </li>
+                    {PluginLinks(this.props.plugins)}
+
                 </ul>
             )
         }

@@ -33,6 +33,7 @@
     "express-session": "^1.14.2",
     "fetch-retry": "^1.0.3",
     "form-data": "^2.1.2",
+    "glob": "^7.1.2",
     "helmet": "^3.5.0",
     "http": "0.0.0",
     "immutability-helper": "^2.1.1",
@@ -81,7 +82,7 @@
     "tape": "^4.6.3",
     "underscore": "^1.8.3",
     "wait-for-port": "0.0.2",
-    "webpack": "^1.14.0",
+    "webpack": "^2.2.0",
     "whatwg-fetch": "^2.0.2",
     "xss": "^0.3.3"
   },
@@ -89,6 +90,6 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "supertest": "^3.0.0",
     "tape": "^4.6.3",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^2.5.0"
   }
 }

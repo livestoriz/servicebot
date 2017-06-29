@@ -1,0 +1,10 @@
+{
+  "name": "test2",
+  "version": "0.0.1",
+  "main": "test.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": []
+  }
+}
