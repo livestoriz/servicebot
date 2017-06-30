@@ -20,14 +20,16 @@ var config = function(){
         console.log(plugins);
     return {
     entry: {
-            "app" : ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
+            "bundle" : ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
+            "plugins" : ['react-hot-loader/patch', PLUGIN_DIR + '/reducers.js']
+
 
 
     },
     output: {
         path: BUILD_DIR,
         publicPath: "/build/",
-        filename: 'bundle.js'
+        filename: '[name].js'
     },
 
     devServer: {
@@ -72,7 +74,19 @@ var config = function(){
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "commons",
+            // (the commons chunk name)
 
+            filename: "commons.js",
+            // (the filename of the commons chunk)
+
+            // minChunks: 3,
+            // (Modules must be shared between 3 entries)
+
+            // chunks: ["pageA", "pageB"],
+            // (Only use these entries)
+        })
         // new webpack.optimize.UglifyJsPlugin({
         //     compress: {
         //         warnings: false

@@ -10,6 +10,7 @@ class TestPage extends React.Component {
 
 
     render () {
+        console.log("SUP");
         return(
             <div>LAME!</div>
         );
