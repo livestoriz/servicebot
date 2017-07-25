@@ -5,7 +5,7 @@ import ServiceRequestForm from "../elements/forms/service-instance-form-request-
 import PageSection from "../layouts/page-section.jsx";
 import Featured from "../layouts/featured.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
-import Price from "../utilities/price.jsx";
+import {Price} from "../utilities/price.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");
 
@@ -137,4 +137,3 @@ class ServiceRequest extends React.Component {
 }
 
 export default connect((state) => {return {options:state.options}})(ServiceRequest);
-

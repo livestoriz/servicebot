@@ -60,7 +60,22 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     };
 
-
+    Entity.createPromise =function(entityData){
+        let self = this
+        return knex(Entity.table).columnInfo()
+                .then(function (info) {
+                    return _.pick(entityData, _.keys(info));
+                })
+                .then(function(data){
+                    return knex(Entity.table).returning("*").insert(data)
+                })
+                .then(function(result){
+                    return result[0];
+                })
+                .catch(function(err){
+                    throw err
+                });
+    };
     Entity.prototype.create = function (callback) {
         let self = this;
         knex(Entity.table).columnInfo()
@@ -141,8 +156,8 @@ module.exports = function(tableName, references=[], primaryKey='id') {
         }
         else {
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
-            console.log("referenceDate");
-            console.log(referenceData);
+            //console.log("referenceDate");
+            //console.log(referenceData);
             reference.model.batchCreate(referenceData, function (response) {
                 if (reference.direction == "to") {
                     self.set(reference.referenceField, response[0][reference.model.primaryKey]);

@@ -60,6 +60,14 @@ let systemOptions =
             "type": "theme",
             "data_type": "color_picker"
         },
+
+        {
+            "option": "app_version",
+            "value": process.env.npm_package_version,
+            public: false,
+            "type": "system",
+            "data_type": "system"
+        },
         {"option": "background_color", "value": "#ffffff", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "page_link_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "header_text_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
@@ -69,6 +77,7 @@ let systemOptions =
         {"option": "company_address", public: true, "type": "system", "data_type": "text"},
         {"option": "company_phone_number", public: true, "type": "system", "data_type": "text"},
         {"option": "company_email", public: true, "type": "system", "data_type": "text"},
+        {"option": "hostname", public: true, "type": "system", "data_type": "text"},
         {"option": "featured_service_heading", "value": "Featured Services", public: true, "type": "featured services", "data_type": "text"},
         {"option": "services_listing_page_heading_text", "value": "All Products and Services", public: true, "type": "services listing page", "data_type": "text"},
         {"option": "featured_service_list_count", "value": "6", public: true, "type": "featured services", "data_type": "number"},
@@ -78,9 +87,9 @@ let systemOptions =
         {"option": "service_box_request_button_text", "value": "default", public: true, "type": "service box", "data_type": "text"},
         {"option": "service_box_category_display", "value": true, public: true, "type": "service box", "data_type": "bool"},
         {"option": "service_box_header_text_color", "value": "#FFFFFF", public: true, "type": "service box", "data_type": "color_picker"},
-        {"option": "service_box_header_background_color", "value": "#30468A", public: true, "type": "service box", "data_type": "color_picker"},
+        {"option": "service_box_header_background_color", "value": "#000000", public: true, "type": "service box", "data_type": "color_picker"},
         {"option": "primary_theme_text_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
-        {"option": "primary_theme_background_color", "value": "#30468A", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "primary_theme_background_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "home_featured_description", "value": "Start Selling Your Services Now!", public: true, "type": "content", "data_type": "text"},
         {"option": "home_featured_heading", "value": "Welcome To ServiceBot!", public: true, "type": "content", "data_type": "text"},
         {"option": "breadcrumb_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
@@ -93,7 +102,6 @@ let systemOptions =
                 return new Promise((resolve, reject) => {
                     new SystemOption(option).create((err, result) => {
                         if(err){
-                            console.log(err)
                             if(err.code == 23505) {
                                 resolve(`option ${option.option} already exists`);
                             }else{
