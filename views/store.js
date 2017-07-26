@@ -15,7 +15,7 @@ const defaultAppState = {
     uid : cookie.load("uid"),
     plugins : pluginReducers({}, {}),
     notifications: [],
-    system_notifications: []]
+    system_notifications: []
 
 
 };
