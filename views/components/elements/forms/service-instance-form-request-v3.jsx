@@ -16,8 +16,9 @@ import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import {addAlert} from "../../utilities/actions";
 let _ = require("lodash");
 
+import consume from "pluginbot-react/src/consume";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-
+import {getPriceAdjustments, validateProperties} from "../../../../lib/handleInputs"
 
 
 const required = value => value ? undefined : 'Required';
@@ -33,7 +34,10 @@ const minValue18 = minValue(18);
 
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
-const customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
+let customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}, services : {widget}}) => {
+    let field = widget.find(widgetDefinition => widgetDefinition.type === type);
+
+    return (
     <div className={`form-group form-group-flex`}>
         {label && <label className="control-label form-label-flex-md">{label}</label>}
         <div className="form-input-flex">
@@ -61,11 +65,17 @@ const customFieldComponent = ({input, label, type, formJSON, config, meta: {touc
             {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
         </div>
     </div>
-);
+)};
 
+let findWidget = function(type, widgets){
+    let widget = widgets.find(widget => widget.type === type);
+    if(!widget){
+        console.error("cannot find a widget");
+    }
+};
 //Custom property
-const renderCustomProperty = (props) => {
-    const { fields, formJSON, meta: { touched, error } } = props;
+let renderCustomProperty = (props) => {
+    const { fields, formJSON, meta: { touched, error }, services : {widget} } = props;
     return (
         <div>
             <ul>
@@ -74,18 +84,18 @@ const renderCustomProperty = (props) => {
                     <Field
                         name={`${customProperty}.data.value`}
                         type={formJSON[index].type}
-                        component={customFieldComponent}
+                        component={findWidget(formJSON[index].type, widget).widget}
                         label={formJSON[index].prop_label}
                         value={formJSON[index].data.value}
                         formJSON={formJSON[index]}
-                        config={formJSON[index].config}
+                        configValue={formJSON[index].config}
                     />
                 </li>
             )}
         </ul>
         </div>
     )};
-
+renderCustomProperty = consume("widget")(renderCustomProperty);
 
 
 //The full form
@@ -97,12 +107,15 @@ class ServiceRequestForm extends React.Component {
     render() {
         let props = this.props;
         const {handleSubmit, formJSON, helpers} = props;
+        let properties = formJSON.references.service_template_properties;
 
         let getPrice = function () {
             const price = formJSON.amount;
             let updatedPrice = formJSON.amount;
             let properties = formJSON.references.service_template_properties;
             let priceChanges = [];
+
+
             properties.map((prop) => {
                 if (prop.config.pricing) {
                     switch (prop.type) {

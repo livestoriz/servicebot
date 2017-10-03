@@ -8,8 +8,12 @@ class Store{
     setStore(store){
       this.store = store;
     }
-    getState(){
-        return this.store.getState().servicebot;
+    getState(getServicebot=true){
+        if(getServicebot) {
+            return this.store.getState().servicebot;
+        }else{
+            return this.store.getState();
+        }
     }
     dispatchEvent(eventName, eventObject){
         return this.store.dispatch(triggerEvent(eventName, eventObject));

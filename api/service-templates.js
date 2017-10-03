@@ -251,12 +251,13 @@ module.exports = function (router) {
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
+            let handlers = store.getState(false).pluginbot.services.inputHandler;
 
             let price = hasPermission ? (req_body.price_override || templatePrice) : templatePrice;
 
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
-            let validationResult = props ? validateProperties(props) : [];
+            let validationResult = props ? validateProperties(props, handlers) : [];
             if (validationResult.length > 0) {
                 return res.status(400).json({error: validationResult});
             }
@@ -278,7 +279,7 @@ module.exports = function (router) {
 
             //Price adjustment -- is here instead of elsewhere because we need a price check == 0 to bypass need for token
             if (props) {
-                let adjustments = require("../lib/handleInputs").getPriceAdjustments(props);
+                let adjustments = require("../lib/handleInputs").getPriceAdjustments(props,handlers);
                 price += adjustments.reduce((acc, adjustment) => {
                     let operation = adjustment.operation;
                     switch (operation) {
