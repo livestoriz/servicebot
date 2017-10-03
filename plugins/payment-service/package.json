@@ -1,0 +1,11 @@
+{
+  "name": "payment-service",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "server" : {
+    "main" : "main.js",
+    "consumes" : ["database"]
+  }
+}
